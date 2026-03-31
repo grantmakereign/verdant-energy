@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verdant Energy — Solar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .kpi-label { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+    .kpi-value { font-size: 26px; font-weight: 600; }
+    .kpi-sub { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+    .kpi-trend { font-size: 12px; font-weight: 600; }
+    .kpi-trend.up { color: var(--green); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .card-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .card-subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+
+    .irradiance-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+    .irr-cell {
+      aspect-ratio: 1;
+      border-radius: 4px;
+      position: relative;
+    }
+
+    .irr-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-align: center;
+      padding-top: 4px;
+    }
+
+    .panel-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .panel-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .panel-rank {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: rgba(46,204,112,0.1);
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .panel-info { flex: 1; }
+    .panel-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+    .panel-location { font-size: 11px; color: var(--text-muted); }
+    .panel-output { font-size: 15px; font-weight: 600; color: var(--green); text-align: right; }
+    .panel-capacity { font-size: 11px; color: var(--text-muted); text-align: right; }
+
+    .full-card { grid-column: 1 / -1; }
+
+    .inverter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+    .inverter {
+      padding: 16px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .inverter-id { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; letter-spacing: 0.5px; }
+    .inverter-value { font-size: 20px; font-weight: 600; }
+    .inverter-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+    .inverter-bar {
+      height: 4px;
+      background: var(--bg-input);
+      border-radius: 2px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    .inverter-fill { height: 100%; border-radius: 2px; }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><div class="circle"></div><span>VERDANT</span></div>
+      <nav class="nav">
+        <span class="nav-section">Main</span>
+        <a href="dashboard.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>Dashboard</a>
+        <a href="energy.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>Energy</a>
+        <a href="sites.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 2a7 7 0 00-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 00-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></span>Sites</a>
+        <a href="solar.html" class="nav-item active"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m-7.07-3.93l2.83-2.83m8.48-8.48l2.83-2.83M2 12h4m12 0h4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83"/></svg></span>Solar</a>
+        <a href="wind.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.59 4.59A2 2 0 1111 8H2m10.59 11.41A2 2 0 1014 16H2m15.73-8.27A2.5 2.5 0 1119.5 12H2"/></svg></span>Wind</a>
+        <span class="nav-section">Management</span>
+        <a href="offsets.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M8 12l2.5 2.5L16 9"/></svg></span>Carbon Offsets</a>
+        <a href="reports.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></span>Reports</a>
+        <a href="settings.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1.08-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1.08 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 010 4h-.09c-.658.003-1.25.396-1.51 1z"/></svg></span>Settings</a>
+      </nav>
+      <div class="sidebar-footer"><div class="avatar">JD</div><div class="user-info"><div class="user-name">Jane Doe</div><div class="user-role">Sustainability Lead</div></div></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-left"><h1>Solar</h1><p>Solar energy generation performance and analytics</p></div>
+        <div class="topbar-actions">
+          <button class="btn-outline"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Export</button>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Solar Output</div>
+            <div class="kpi-value" style="color:var(--green)">5.58 GW</div>
+            <div class="kpi-sub"><span class="kpi-trend up">+11.3%</span> vs last month</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Solar Sites</div>
+            <div class="kpi-value">142</div>
+            <div class="kpi-sub">+4 new this quarter</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Avg Irradiance</div>
+            <div class="kpi-value">5.8 kWh/m&sup2;</div>
+            <div class="kpi-sub">Peak: 7.2 kWh/m&sup2;</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Panel Efficiency</div>
+            <div class="kpi-value">22.4%</div>
+            <div class="kpi-sub"><span class="kpi-trend up">+0.8%</span> after cleaning cycle</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <!-- Irradiance Heatmap -->
+          <div class="card">
+            <div class="card-title">Weekly Irradiance Heatmap</div>
+            <div class="card-subtitle">Average daily solar irradiance (kWh/m&sup2;) this month</div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <div class="irr-label" style="display:flex;gap:4px;padding-left:0;">
+                <span style="flex:1;text-align:center">Mon</span><span style="flex:1;text-align:center">Tue</span><span style="flex:1;text-align:center">Wed</span><span style="flex:1;text-align:center">Thu</span><span style="flex:1;text-align:center">Fri</span><span style="flex:1;text-align:center">Sat</span><span style="flex:1;text-align:center">Sun</span>
+              </div>
+              <div class="irradiance-grid">
+                <div class="irr-cell" style="background:rgba(46,204,112,0.7)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.5)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.8)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.6)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.9)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.4)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.3)"></div>
+              </div>
+              <div class="irradiance-grid">
+                <div class="irr-cell" style="background:rgba(46,204,112,0.6)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.8)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.9)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,1)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.7)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.5)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.4)"></div>
+              </div>
+              <div class="irradiance-grid">
+                <div class="irr-cell" style="background:rgba(46,204,112,0.5)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.3)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.4)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.6)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.8)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.9)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.7)"></div>
+              </div>
+              <div class="irradiance-grid">
+                <div class="irr-cell" style="background:rgba(46,204,112,0.9)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,1)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.8)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.7)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.85)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.6)"></div>
+                <div class="irr-cell" style="background:rgba(46,204,112,0.5)"></div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:16px;font-size:11px;color:var(--text-muted)">
+              <span>Low</span>
+              <div style="flex:1;height:6px;border-radius:3px;background:linear-gradient(to right,rgba(46,204,112,0.2),rgba(46,204,112,1))"></div>
+              <span>High</span>
+            </div>
+          </div>
+
+          <!-- Top Performing Sites -->
+          <div class="card">
+            <div class="card-title">Top Performing Sites</div>
+            <div class="card-subtitle">Ranked by current output</div>
+            <div class="panel-list">
+              <div class="panel-row">
+                <div class="panel-rank">1</div>
+                <div class="panel-info"><div class="panel-name">Sunbelt Station</div><div class="panel-location">Nevada, US</div></div>
+                <div><div class="panel-output">501 MW</div><div class="panel-capacity">of 520 MW</div></div>
+              </div>
+              <div class="panel-row">
+                <div class="panel-rank">2</div>
+                <div class="panel-info"><div class="panel-name">Mesa Solar Farm</div><div class="panel-location">Arizona, US</div></div>
+                <div><div class="panel-output">398 MW</div><div class="panel-capacity">of 420 MW</div></div>
+              </div>
+              <div class="panel-row">
+                <div class="panel-rank">3</div>
+                <div class="panel-info"><div class="panel-name">Desert Bloom</div><div class="panel-location">New Mexico, US</div></div>
+                <div><div class="panel-output">318 MW</div><div class="panel-capacity">of 340 MW</div></div>
+              </div>
+              <div class="panel-row">
+                <div class="panel-rank">4</div>
+                <div class="panel-info"><div class="panel-name">Palmdale Array</div><div class="panel-location">California, US</div></div>
+                <div><div class="panel-output">261 MW</div><div class="panel-capacity">of 280 MW</div></div>
+              </div>
+              <div class="panel-row">
+                <div class="panel-rank">5</div>
+                <div class="panel-info"><div class="panel-name">Valley Sun</div><div class="panel-location">Texas, US</div></div>
+                <div><div class="panel-output">245 MW</div><div class="panel-capacity">of 260 MW</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inverter Status -->
+        <div class="card full-card">
+          <div class="card-title">Inverter Status — Mesa Solar Farm</div>
+          <div class="card-subtitle">Real-time inverter performance monitoring</div>
+          <div class="inverter-grid">
+            <div class="inverter">
+              <div class="inverter-id">INV-001</div>
+              <div class="inverter-value" style="color:var(--green)">98.2%</div>
+              <div class="inverter-label">52.1 MW</div>
+              <div class="inverter-bar"><div class="inverter-fill" style="width:98.2%;background:var(--green)"></div></div>
+            </div>
+            <div class="inverter">
+              <div class="inverter-id">INV-002</div>
+              <div class="inverter-value" style="color:var(--green)">96.7%</div>
+              <div class="inverter-label">51.3 MW</div>
+              <div class="inverter-bar"><div class="inverter-fill" style="width:96.7%;background:var(--green)"></div></div>
+            </div>
+            <div class="inverter">
+              <div class="inverter-id">INV-003</div>
+              <div class="inverter-value" style="color:var(--green)">97.4%</div>
+              <div class="inverter-label">51.6 MW</div>
+              <div class="inverter-bar"><div class="inverter-fill" style="width:97.4%;background:var(--green)"></div></div>
+            </div>
+            <div class="inverter">
+              <div class="inverter-id">INV-004</div>
+              <div class="inverter-value" style="color:var(--yellow)">84.1%</div>
+              <div class="inverter-label">44.6 MW</div>
+              <div class="inverter-bar"><div class="inverter-fill" style="width:84.1%;background:var(--yellow)"></div></div>
+            </div>
+            <div class="inverter">
+              <div class="inverter-id">INV-005</div>
+              <div class="inverter-value" style="color:var(--green)">95.8%</div>
+              <div class="inverter-label">50.8 MW</div>
+              <div class="inverter-bar"><div class="inverter-fill" style="width:95.8%;background:var(--green)"></div></div>
+            </div>
+            <div class="inverter">
+              <div class="inverter-id">INV-006</div>
+              <div class="inverter-value" style="color:var(--green)">97.9%</div>
+              <div class="inverter-label">51.9 MW</div>
+              <div class="inverter-bar"><div class="inverter-fill" style="width:97.9%;background:var(--green)"></div></div>
+            </div>
+            <div class="inverter">
+              <div class="inverter-id">INV-007</div>
+              <div class="inverter-value" style="color:var(--green)">96.1%</div>
+              <div class="inverter-label">50.9 MW</div>
+              <div class="inverter-bar"><div class="inverter-fill" style="width:96.1%;background:var(--green)"></div></div>
+            </div>
+            <div class="inverter">
+              <div class="inverter-id">INV-008</div>
+              <div class="inverter-value" style="color:var(--green)">94.3%</div>
+              <div class="inverter-label">50.0 MW</div>
+              <div class="inverter-bar"><div class="inverter-fill" style="width:94.3%;background:var(--green)"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

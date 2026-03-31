@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verdant Energy — Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .settings-layout { display: grid; grid-template-columns: 200px 1fr; gap: 24px; }
+
+    .settings-nav { display: flex; flex-direction: column; gap: 2px; }
+
+    .settings-nav-item {
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+
+    .settings-nav-item:hover { color: var(--text-secondary); background: rgba(46,204,112,0.04); }
+    .settings-nav-item.active { color: var(--green); background: rgba(46,204,112,0.08); }
+
+    .settings-panel { display: flex; flex-direction: column; gap: 24px; }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .card-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .card-subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    .form-label { font-size: 13px; font-weight: 500; color: var(--text-secondary); }
+
+    .form-input {
+      height: 40px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--text-primary);
+      outline: none;
+    }
+
+    .form-input:focus { border-color: var(--green); }
+    .form-input::placeholder { color: var(--text-muted); }
+
+    .form-input.textarea {
+      height: auto;
+      min-height: 80px;
+      padding: 10px 12px;
+      resize: vertical;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 8px;
+    }
+
+    /* Toggle */
+    .toggle-list { display: flex; flex-direction: column; gap: 0; }
+
+    .toggle-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .toggle-item:last-child { border-bottom: none; }
+
+    .toggle-info { flex: 1; }
+    .toggle-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+    .toggle-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    .toggle-switch {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      transition: 0.2s;
+    }
+
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      height: 16px; width: 16px;
+      left: 2px; bottom: 2px;
+      background: var(--text-muted);
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+
+    .toggle-switch input:checked + .toggle-slider { background: var(--green); border-color: var(--green); }
+    .toggle-switch input:checked + .toggle-slider::before { transform: translateX(18px); background: #fff; }
+
+    /* Team members */
+    .member-list { display: flex; flex-direction: column; gap: 0; }
+
+    .member-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .member-item:last-child { border-bottom: none; }
+
+    .member-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 600; font-size: 13px; flex-shrink: 0;
+    }
+
+    .member-info { flex: 1; }
+    .member-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+    .member-email { font-size: 12px; color: var(--text-muted); }
+
+    .role-badge {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .role-badge.admin { background: rgba(46,204,112,0.1); border-color: rgba(46,204,112,0.3); color: var(--green); }
+
+    /* Danger zone */
+    .danger-zone {
+      border-color: rgba(231,76,60,0.3);
+    }
+
+    .danger-zone .card-title { color: var(--red); }
+
+    .danger-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .danger-item:last-child { border-bottom: none; }
+
+    .btn-danger {
+      height: 34px;
+      padding: 0 14px;
+      background: transparent;
+      border: 1px solid rgba(231,76,60,0.4);
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--red);
+      cursor: pointer;
+    }
+
+    .btn-danger:hover { background: rgba(231,76,60,0.1); }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><div class="circle"></div><span>VERDANT</span></div>
+      <nav class="nav">
+        <span class="nav-section">Main</span>
+        <a href="dashboard.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>Dashboard</a>
+        <a href="energy.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>Energy</a>
+        <a href="sites.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 2a7 7 0 00-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 00-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></span>Sites</a>
+        <a href="solar.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m-7.07-3.93l2.83-2.83m8.48-8.48l2.83-2.83M2 12h4m12 0h4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83"/></svg></span>Solar</a>
+        <a href="wind.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.59 4.59A2 2 0 1111 8H2m10.59 11.41A2 2 0 1014 16H2m15.73-8.27A2.5 2.5 0 1119.5 12H2"/></svg></span>Wind</a>
+        <span class="nav-section">Management</span>
+        <a href="offsets.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M8 12l2.5 2.5L16 9"/></svg></span>Carbon Offsets</a>
+        <a href="reports.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></span>Reports</a>
+        <a href="settings.html" class="nav-item active"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1.08-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1.08 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 010 4h-.09c-.658.003-1.25.396-1.51 1z"/></svg></span>Settings</a>
+      </nav>
+      <div class="sidebar-footer"><div class="avatar">JD</div><div class="user-info"><div class="user-name">Jane Doe</div><div class="user-role">Sustainability Lead</div></div></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-left"><h1>Settings</h1><p>Account, notifications, and team management</p></div>
+        <div class="topbar-actions"></div>
+      </header>
+
+      <div class="content">
+        <div class="settings-layout">
+          <div class="settings-nav">
+            <div class="settings-nav-item active">Profile</div>
+            <div class="settings-nav-item">Notifications</div>
+            <div class="settings-nav-item">Team</div>
+            <div class="settings-nav-item">Integrations</div>
+            <div class="settings-nav-item">Billing</div>
+            <div class="settings-nav-item" style="color:var(--red)">Danger Zone</div>
+          </div>
+
+          <div class="settings-panel">
+            <!-- Profile -->
+            <div class="card">
+              <div class="card-title">Profile</div>
+              <div class="card-subtitle">Your personal account information</div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">First Name</label>
+                  <input class="form-input" type="text" value="Jane">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Last Name</label>
+                  <input class="form-input" type="text" value="Doe">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Email</label>
+                  <input class="form-input" type="email" value="jane.doe@verdant.energy">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Role</label>
+                  <input class="form-input" type="text" value="Sustainability Lead">
+                </div>
+                <div class="form-group full">
+                  <label class="form-label">Organization</label>
+                  <input class="form-input" type="text" value="Verdant Energy Corp." disabled style="opacity:0.5">
+                </div>
+              </div>
+              <div class="form-actions">
+                <button class="btn-outline" style="height:36px;padding:0 16px;font-size:13px;">Cancel</button>
+                <button class="btn-primary" style="height:36px;padding:0 16px;font-size:13px;">Save Changes</button>
+              </div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="card">
+              <div class="card-title">Notifications</div>
+              <div class="card-subtitle">Configure how you receive alerts and updates</div>
+              <div class="toggle-list">
+                <div class="toggle-item">
+                  <div class="toggle-info">
+                    <div class="toggle-name">Email Alerts</div>
+                    <div class="toggle-desc">Receive critical site alerts via email</div>
+                  </div>
+                  <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                </div>
+                <div class="toggle-item">
+                  <div class="toggle-info">
+                    <div class="toggle-name">Weekly Digest</div>
+                    <div class="toggle-desc">Summary of portfolio performance every Monday</div>
+                  </div>
+                  <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                </div>
+                <div class="toggle-item">
+                  <div class="toggle-info">
+                    <div class="toggle-name">Maintenance Notifications</div>
+                    <div class="toggle-desc">Alerts when sites go into scheduled maintenance</div>
+                  </div>
+                  <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                </div>
+                <div class="toggle-item">
+                  <div class="toggle-info">
+                    <div class="toggle-name">Anomaly Detection</div>
+                    <div class="toggle-desc">Real-time alerts for unusual performance patterns</div>
+                  </div>
+                  <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                </div>
+                <div class="toggle-item">
+                  <div class="toggle-info">
+                    <div class="toggle-name">Marketing Updates</div>
+                    <div class="toggle-desc">Product news and feature announcements</div>
+                  </div>
+                  <label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Team -->
+            <div class="card">
+              <div class="card-title">Team Members</div>
+              <div class="card-subtitle">Manage who has access to this workspace</div>
+              <div class="member-list">
+                <div class="member-item">
+                  <div class="member-avatar" style="background:var(--green-dim);color:var(--green)">JD</div>
+                  <div class="member-info"><div class="member-name">Jane Doe</div><div class="member-email">jane.doe@verdant.energy</div></div>
+                  <span class="role-badge admin">Admin</span>
+                </div>
+                <div class="member-item">
+                  <div class="member-avatar" style="background:rgba(52,152,219,0.15);color:var(--blue)">MS</div>
+                  <div class="member-info"><div class="member-name">Mark Stevens</div><div class="member-email">mark.stevens@verdant.energy</div></div>
+                  <span class="role-badge">Editor</span>
+                </div>
+                <div class="member-item">
+                  <div class="member-avatar" style="background:rgba(241,196,15,0.15);color:var(--yellow)">AL</div>
+                  <div class="member-info"><div class="member-name">Amy Lin</div><div class="member-email">amy.lin@verdant.energy</div></div>
+                  <span class="role-badge">Editor</span>
+                </div>
+                <div class="member-item">
+                  <div class="member-avatar" style="background:rgba(142,68,173,0.15);color:#8e44ad">CR</div>
+                  <div class="member-info"><div class="member-name">Carlos Reyes</div><div class="member-email">carlos.reyes@verdant.energy</div></div>
+                  <span class="role-badge">Viewer</span>
+                </div>
+              </div>
+              <div class="form-actions" style="padding-top:16px;border-top:1px solid var(--border);margin-top:8px">
+                <button class="btn-primary" style="height:36px;padding:0 16px;font-size:13px;">+ Invite Member</button>
+              </div>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="card danger-zone">
+              <div class="card-title">Danger Zone</div>
+              <div class="card-subtitle">Irreversible actions — proceed with caution</div>
+              <div class="danger-item">
+                <div class="toggle-info">
+                  <div class="toggle-name">Export All Data</div>
+                  <div class="toggle-desc">Download a complete archive of your workspace data</div>
+                </div>
+                <button class="btn-danger">Export</button>
+              </div>
+              <div class="danger-item">
+                <div class="toggle-info">
+                  <div class="toggle-name">Delete Workspace</div>
+                  <div class="toggle-desc">Permanently delete this workspace and all associated data</div>
+                </div>
+                <button class="btn-danger">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

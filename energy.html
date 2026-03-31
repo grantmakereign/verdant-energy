@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verdant Energy — Energy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    /* ── Energy-specific ── */
+    .energy-overview {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .source-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .source-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .source-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .source-icon.solar { background: rgba(46,204,112,0.12); color: var(--green); }
+    .source-icon.wind { background: rgba(52,152,219,0.12); color: var(--blue); }
+    .source-icon.hydro { background: rgba(241,196,15,0.12); color: var(--yellow); }
+
+    .source-name { font-size: 15px; font-weight: 600; }
+    .source-status { font-size: 12px; color: var(--green); display: flex; align-items: center; gap: 4px; }
+    .source-status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+
+    .source-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .source-stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .source-stat-value { font-size: 18px; font-weight: 600; margin-top: 2px; }
+
+    .source-bar { height: 4px; background: var(--bg-input); border-radius: 2px; overflow: hidden; }
+    .source-bar-fill { height: 100%; border-radius: 2px; }
+
+    /* ── Live Grid ── */
+    .grid-status {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .grid-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .grid-title { font-size: 15px; font-weight: 600; }
+    .grid-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    .live-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--green);
+      background: rgba(46,204,112,0.1);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .live-badge .pulse {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .grid-metrics {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+
+    .grid-metric {
+      text-align: center;
+      padding: 16px;
+      background: var(--bg-primary);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .grid-metric-value { font-size: 22px; font-weight: 600; }
+    .grid-metric-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .grid-metric-sub { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+
+    /* ── Hourly Chart ── */
+    .hourly-chart {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .sparkline-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 180px;
+      padding-bottom: 24px;
+      position: relative;
+    }
+
+    .spark-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      height: 100%;
+      justify-content: flex-end;
+    }
+
+    .spark-bar {
+      width: 80%;
+      border-radius: 3px 3px 0 0;
+      min-height: 4px;
+    }
+
+    .spark-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      position: absolute;
+      bottom: 0;
+    }
+
+    .spark-col .spark-label { position: static; }
+
+    /* ── Demand Table ── */
+    .demand-table {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0 12px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      font-size: 13px;
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .badge.green { background: rgba(46,204,112,0.12); color: var(--green); }
+    .badge.yellow { background: rgba(241,196,15,0.12); color: var(--yellow); }
+    .badge.red { background: rgba(231,76,60,0.12); color: var(--red); }
+
+    .two-col { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><div class="circle"></div><span>VERDANT</span></div>
+      <nav class="nav">
+        <span class="nav-section">Main</span>
+        <a href="dashboard.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>Dashboard</a>
+        <a href="energy.html" class="nav-item active"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>Energy</a>
+        <a href="sites.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 2a7 7 0 00-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 00-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></span>Sites</a>
+        <a href="solar.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m-7.07-3.93l2.83-2.83m8.48-8.48l2.83-2.83M2 12h4m12 0h4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83"/></svg></span>Solar</a>
+        <a href="wind.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.59 4.59A2 2 0 1111 8H2m10.59 11.41A2 2 0 1014 16H2m15.73-8.27A2.5 2.5 0 1119.5 12H2"/></svg></span>Wind</a>
+        <span class="nav-section">Management</span>
+        <a href="offsets.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M8 12l2.5 2.5L16 9"/></svg></span>Carbon Offsets</a>
+        <a href="reports.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></span>Reports</a>
+        <a href="settings.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1.08-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1.08 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 010 4h-.09c-.658.003-1.25.396-1.51 1z"/></svg></span>Settings</a>
+      </nav>
+      <div class="sidebar-footer"><div class="avatar">JD</div><div class="user-info"><div class="user-name">Jane Doe</div><div class="user-role">Sustainability Lead</div></div></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <h1>Energy</h1>
+          <p>Real-time production and grid overview</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn-outline">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Export
+          </button>
+          <button class="btn-primary">+ Add Source</button>
+        </div>
+      </header>
+
+      <div class="content">
+        <!-- Source Cards -->
+        <div class="energy-overview">
+          <div class="source-card">
+            <div class="source-header">
+              <div class="source-icon solar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m-7.07-3.93l2.83-2.83m8.48-8.48l2.83-2.83M2 12h4m12 0h4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83"/></svg></div>
+              <div>
+                <div class="source-name">Solar</div>
+                <div class="source-status"><span class="dot"></span> All systems operational</div>
+              </div>
+            </div>
+            <div class="source-stats">
+              <div><div class="source-stat-label">Output</div><div class="source-stat-value">5.58 GW</div></div>
+              <div><div class="source-stat-label">Capacity</div><div class="source-stat-value">6.2 GW</div></div>
+              <div><div class="source-stat-label">Sites</div><div class="source-stat-value">142</div></div>
+              <div><div class="source-stat-label">Efficiency</div><div class="source-stat-value">90.0%</div></div>
+            </div>
+            <div class="source-bar"><div class="source-bar-fill" style="width:90%;background:var(--green)"></div></div>
+          </div>
+
+          <div class="source-card">
+            <div class="source-header">
+              <div class="source-icon wind"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.59 4.59A2 2 0 1111 8H2m10.59 11.41A2 2 0 1014 16H2m15.73-8.27A2.5 2.5 0 1119.5 12H2"/></svg></div>
+              <div>
+                <div class="source-name">Wind</div>
+                <div class="source-status"><span class="dot"></span> All systems operational</div>
+              </div>
+            </div>
+            <div class="source-stats">
+              <div><div class="source-stat-label">Output</div><div class="source-stat-value">3.72 GW</div></div>
+              <div><div class="source-stat-label">Capacity</div><div class="source-stat-value">4.1 GW</div></div>
+              <div><div class="source-stat-label">Sites</div><div class="source-stat-value">98</div></div>
+              <div><div class="source-stat-label">Efficiency</div><div class="source-stat-value">90.7%</div></div>
+            </div>
+            <div class="source-bar"><div class="source-bar-fill" style="width:90.7%;background:var(--blue)"></div></div>
+          </div>
+
+          <div class="source-card">
+            <div class="source-header">
+              <div class="source-icon hydro"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg></div>
+              <div>
+                <div class="source-name">Hydro</div>
+                <div class="source-status"><span class="dot"></span> All systems operational</div>
+              </div>
+            </div>
+            <div class="source-stats">
+              <div><div class="source-stat-label">Output</div><div class="source-stat-value">1.86 GW</div></div>
+              <div><div class="source-stat-label">Capacity</div><div class="source-stat-value">2.1 GW</div></div>
+              <div><div class="source-stat-label">Sites</div><div class="source-stat-value">44</div></div>
+              <div><div class="source-stat-label">Efficiency</div><div class="source-stat-value">88.6%</div></div>
+            </div>
+            <div class="source-bar"><div class="source-bar-fill" style="width:88.6%;background:var(--yellow)"></div></div>
+          </div>
+        </div>
+
+        <!-- Live Grid Status -->
+        <div class="grid-status">
+          <div class="grid-header">
+            <div><div class="grid-title">Live Grid Status</div><div class="grid-subtitle">Current network performance metrics</div></div>
+            <div class="live-badge"><span class="pulse"></span> Live</div>
+          </div>
+          <div class="grid-metrics">
+            <div class="grid-metric">
+              <div class="grid-metric-value" style="color:var(--green)">12.4 GW</div>
+              <div class="grid-metric-label">Total Output</div>
+              <div class="grid-metric-sub">of 13.1 GW capacity</div>
+            </div>
+            <div class="grid-metric">
+              <div class="grid-metric-value">94.7%</div>
+              <div class="grid-metric-label">Efficiency</div>
+              <div class="grid-metric-sub">+0.3% today</div>
+            </div>
+            <div class="grid-metric">
+              <div class="grid-metric-value">284</div>
+              <div class="grid-metric-label">Active Sites</div>
+              <div class="grid-metric-sub">0 offline</div>
+            </div>
+            <div class="grid-metric">
+              <div class="grid-metric-value">49.6 Hz</div>
+              <div class="grid-metric-label">Grid Frequency</div>
+              <div class="grid-metric-sub">nominal range</div>
+            </div>
+            <div class="grid-metric">
+              <div class="grid-metric-value">2.1 GW</div>
+              <div class="grid-metric-label">Storage</div>
+              <div class="grid-metric-sub">820 MWh available</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <!-- Hourly Production -->
+          <div class="hourly-chart">
+            <div class="chart-header">
+              <div><div class="grid-title">Today's Production</div><div class="grid-subtitle">Hourly output (GWh)</div></div>
+            </div>
+            <div class="sparkline-row">
+              <div class="spark-col"><div class="spark-bar" style="height:15%;background:var(--green)"></div><span class="spark-label">6a</span></div>
+              <div class="spark-col"><div class="spark-bar" style="height:25%;background:var(--green)"></div><span class="spark-label">7a</span></div>
+              <div class="spark-col"><div class="spark-bar" style="height:45%;background:var(--green)"></div><span class="spark-label">8a</span></div>
+              <div class="spark-col"><div class="spark-bar" style="height:65%;background:var(--green)"></div><span class="spark-label">9a</span></div>
+              <div class="spark-col"><div class="spark-bar" style="height:80%;background:var(--green)"></div><span class="spark-label">10a</span></div>
+              <div class="spark-col"><div class="spark-bar" style="height:90%;background:var(--green)"></div><span class="spark-label">11a</span></div>
+              <div class="spark-col"><div class="spark-bar" style="height:100%;background:var(--green)"></div><span class="spark-label">12p</span></div>
+              <div class="spark-col"><div class="spark-bar" style="height:95%;background:var(--green)"></div><span class="spark-label">1p</span></div>
+              <div class="spark-col"><div class="spark-bar" style="height:85%;background:var(--green)"></div><span class="spark-label">2p</span></div>
+              <div class="spark-col"><div class="spark-bar" style="height:70%;background:var(--green)"></div><span class="spark-label">3p</span></div>
+              <div class="spark-col"><div class="spark-bar" style="height:50%;background:var(--green)"></div><span class="spark-label">4p</span></div>
+              <div class="spark-col"><div class="spark-bar" style="height:30%;background:var(--border)"></div><span class="spark-label">5p</span></div>
+              <div class="spark-col"><div class="spark-bar" style="height:15%;background:var(--border)"></div><span class="spark-label">6p</span></div>
+              <div class="spark-col"><div class="spark-bar" style="height:8%;background:var(--border)"></div><span class="spark-label">7p</span></div>
+            </div>
+          </div>
+
+          <!-- Demand Response -->
+          <div class="demand-table">
+            <div class="chart-header">
+              <div><div class="grid-title">Peak Demand</div><div class="grid-subtitle">Regional breakdown</div></div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Region</th><th>Demand</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td>Northeast</td><td>3.2 GW</td><td><span class="badge green">Normal</span></td></tr>
+                  <tr><td>Southeast</td><td>2.8 GW</td><td><span class="badge green">Normal</span></td></tr>
+                  <tr><td>Midwest</td><td>2.1 GW</td><td><span class="badge green">Normal</span></td></tr>
+                  <tr><td>Southwest</td><td>2.6 GW</td><td><span class="badge yellow">Elevated</span></td></tr>
+                  <tr><td>West Coast</td><td>1.7 GW</td><td><span class="badge green">Normal</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

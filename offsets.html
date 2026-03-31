@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verdant Energy — Carbon Offsets</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .kpi-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+    .kpi-label { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+    .kpi-value { font-size: 26px; font-weight: 600; }
+    .kpi-sub { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+    .kpi-trend { font-size: 12px; font-weight: 600; }
+    .kpi-trend.up { color: var(--green); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+    .card-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .card-subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+
+    /* Monthly offset chart */
+    .offset-chart { display: flex; align-items: flex-end; gap: 8px; height: 180px; }
+    .offset-bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; }
+    .offset-bar { width: 70%; border-radius: 4px 4px 0 0; }
+    .offset-label { font-size: 10px; color: var(--text-muted); }
+
+    .chart-legend { display: flex; gap: 20px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* Certificate list */
+    .cert-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .cert-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .cert-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(46,204,112,0.1); color: var(--green);
+      flex-shrink: 0;
+    }
+
+    .cert-info { flex: 1; }
+    .cert-id { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+    .cert-project { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+    .cert-amount { font-size: 15px; font-weight: 600; text-align: right; }
+    .cert-date { font-size: 11px; color: var(--text-muted); text-align: right; }
+
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+    .badge.green { background: rgba(46,204,112,0.12); color: var(--green); }
+    .badge.yellow { background: rgba(241,196,15,0.12); color: var(--yellow); }
+    .badge.blue { background: rgba(52,152,219,0.12); color: var(--blue); }
+
+    /* Project cards */
+    .project-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+    .project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .project-type { font-size: 11px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; }
+    .project-name { font-size: 15px; font-weight: 600; }
+    .project-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+    .project-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .project-stat-label { font-size: 11px; color: var(--text-muted); }
+    .project-stat-value { font-size: 14px; font-weight: 600; margin-top: 2px; }
+
+    .progress-bar { height: 4px; background: var(--bg-input); border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 2px; }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><div class="circle"></div><span>VERDANT</span></div>
+      <nav class="nav">
+        <span class="nav-section">Main</span>
+        <a href="dashboard.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>Dashboard</a>
+        <a href="energy.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>Energy</a>
+        <a href="sites.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 2a7 7 0 00-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 00-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></span>Sites</a>
+        <a href="solar.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m-7.07-3.93l2.83-2.83m8.48-8.48l2.83-2.83M2 12h4m12 0h4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83"/></svg></span>Solar</a>
+        <a href="wind.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.59 4.59A2 2 0 1111 8H2m10.59 11.41A2 2 0 1014 16H2m15.73-8.27A2.5 2.5 0 1119.5 12H2"/></svg></span>Wind</a>
+        <span class="nav-section">Management</span>
+        <a href="offsets.html" class="nav-item active"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M8 12l2.5 2.5L16 9"/></svg></span>Carbon Offsets</a>
+        <a href="reports.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></span>Reports</a>
+        <a href="settings.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1.08-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1.08 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 010 4h-.09c-.658.003-1.25.396-1.51 1z"/></svg></span>Settings</a>
+      </nav>
+      <div class="sidebar-footer"><div class="avatar">JD</div><div class="user-info"><div class="user-name">Jane Doe</div><div class="user-role">Sustainability Lead</div></div></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-left"><h1>Carbon Offsets</h1><p>Track credits, certificates, and offset projects</p></div>
+        <div class="topbar-actions">
+          <button class="btn-outline"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Export</button>
+          <button class="btn-primary">+ Purchase Credits</button>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Total CO&#8322; Offset</div>
+            <div class="kpi-value" style="color:var(--green)">3.2M tons</div>
+            <div class="kpi-sub"><span class="kpi-trend up">+12.5%</span> vs last month</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Credits Available</div>
+            <div class="kpi-value">847K</div>
+            <div class="kpi-sub">$12.4M market value</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Credits Retired</div>
+            <div class="kpi-value">2.35M</div>
+            <div class="kpi-sub">Across 18 projects</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Avg Credit Price</div>
+            <div class="kpi-value">$14.60</div>
+            <div class="kpi-sub"><span class="kpi-trend up">+$1.20</span> this quarter</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <!-- Monthly Offsets -->
+          <div class="card">
+            <div class="card-title">Monthly Carbon Offsets</div>
+            <div class="card-subtitle">Tons of CO&#8322; offset per month (thousands)</div>
+            <div class="offset-chart">
+              <div class="offset-bar-group"><div class="offset-bar" style="height:50%;background:var(--green)"></div><span class="offset-label">Oct</span></div>
+              <div class="offset-bar-group"><div class="offset-bar" style="height:55%;background:var(--green)"></div><span class="offset-label">Nov</span></div>
+              <div class="offset-bar-group"><div class="offset-bar" style="height:48%;background:var(--green)"></div><span class="offset-label">Dec</span></div>
+              <div class="offset-bar-group"><div class="offset-bar" style="height:60%;background:var(--green)"></div><span class="offset-label">Jan</span></div>
+              <div class="offset-bar-group"><div class="offset-bar" style="height:68%;background:var(--green)"></div><span class="offset-label">Feb</span></div>
+              <div class="offset-bar-group"><div class="offset-bar" style="height:75%;background:var(--green)"></div><span class="offset-label">Mar</span></div>
+            </div>
+          </div>
+
+          <!-- Recent Certificates -->
+          <div class="card">
+            <div class="card-title">Recent Certificates</div>
+            <div class="card-subtitle">Latest issued carbon offset certificates</div>
+            <div class="cert-list">
+              <div class="cert-row">
+                <div class="cert-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M8 12l2.5 2.5L16 9"/></svg></div>
+                <div class="cert-info"><div class="cert-id">#CO-2026-4891</div><div class="cert-project">Mesa Solar — Voluntary</div></div>
+                <div><div class="cert-amount" style="color:var(--green)">12,400 t</div><div class="cert-date">Mar 30, 2026</div></div>
+              </div>
+              <div class="cert-row">
+                <div class="cert-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M8 12l2.5 2.5L16 9"/></svg></div>
+                <div class="cert-info"><div class="cert-id">#CO-2026-4890</div><div class="cert-project">North Ridge Wind — Compliance</div></div>
+                <div><div class="cert-amount" style="color:var(--green)">8,750 t</div><div class="cert-date">Mar 28, 2026</div></div>
+              </div>
+              <div class="cert-row">
+                <div class="cert-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M8 12l2.5 2.5L16 9"/></svg></div>
+                <div class="cert-info"><div class="cert-id">#CO-2026-4889</div><div class="cert-project">Cascade Hydro — Voluntary</div></div>
+                <div><div class="cert-amount" style="color:var(--green)">5,200 t</div><div class="cert-date">Mar 25, 2026</div></div>
+              </div>
+              <div class="cert-row">
+                <div class="cert-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M8 12l2.5 2.5L16 9"/></svg></div>
+                <div class="cert-info"><div class="cert-id">#CO-2026-4888</div><div class="cert-project">Sunbelt Station — Compliance</div></div>
+                <div><div class="cert-amount" style="color:var(--green)">15,800 t</div><div class="cert-date">Mar 22, 2026</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Offset Projects -->
+        <div class="project-grid">
+          <div class="project-card">
+            <span class="badge green">Active</span>
+            <div class="project-name">Reforestation — Pacific Northwest</div>
+            <div class="project-desc">Native tree planting across 12,000 acres of degraded land in Oregon and Washington.</div>
+            <div class="project-stats">
+              <div><div class="project-stat-label">Credits Generated</div><div class="project-stat-value">480K</div></div>
+              <div><div class="project-stat-label">Annual Target</div><div class="project-stat-value">600K</div></div>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:80%;background:var(--green)"></div></div>
+          </div>
+          <div class="project-card">
+            <span class="badge green">Active</span>
+            <div class="project-name">Methane Capture — Midwest</div>
+            <div class="project-desc">Landfill gas-to-energy conversion at 8 sites across Illinois and Indiana.</div>
+            <div class="project-stats">
+              <div><div class="project-stat-label">Credits Generated</div><div class="project-stat-value">320K</div></div>
+              <div><div class="project-stat-label">Annual Target</div><div class="project-stat-value">450K</div></div>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:71%;background:var(--green)"></div></div>
+          </div>
+          <div class="project-card">
+            <span class="badge yellow">Pending</span>
+            <div class="project-name">Blue Carbon — Gulf Coast</div>
+            <div class="project-desc">Mangrove restoration and coastal wetland conservation spanning 5,000 acres.</div>
+            <div class="project-stats">
+              <div><div class="project-stat-label">Est. Credits</div><div class="project-stat-value">200K</div></div>
+              <div><div class="project-stat-label">Start Date</div><div class="project-stat-value">Q2 2026</div></div>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:15%;background:var(--yellow)"></div></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

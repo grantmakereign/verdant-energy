@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verdant Energy — Reports</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .two-col { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+    .card-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .card-subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+
+    .report-list { display: flex; flex-direction: column; gap: 0; }
+
+    .report-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .report-item:last-child { border-bottom: none; }
+
+    .report-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .report-icon.pdf { background: rgba(231,76,60,0.12); color: var(--red); }
+    .report-icon.xlsx { background: rgba(46,204,112,0.12); color: var(--green); }
+    .report-icon.csv { background: rgba(52,152,219,0.12); color: var(--blue); }
+
+    .report-info { flex: 1; }
+    .report-name { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+    .report-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; display: flex; gap: 12px; }
+
+    .report-actions { display: flex; gap: 8px; }
+
+    .icon-btn {
+      width: 32px; height: 32px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+
+    .icon-btn:hover { border-color: var(--green); color: var(--green); }
+
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+    .badge.green { background: rgba(46,204,112,0.12); color: var(--green); }
+    .badge.yellow { background: rgba(241,196,15,0.12); color: var(--yellow); }
+    .badge.blue { background: rgba(52,152,219,0.12); color: var(--blue); }
+
+    /* Schedule cards */
+    .schedule-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .schedule-item {
+      padding: 14px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .schedule-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .schedule-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+    .schedule-freq { font-size: 11px; color: var(--text-muted); }
+    .schedule-next { font-size: 12px; color: var(--text-secondary); }
+    .schedule-recipients { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+    /* Template grid */
+    .template-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+    .template-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    .template-card:hover { border-color: var(--green); }
+
+    .template-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(46,204,112,0.08);
+      color: var(--green);
+    }
+
+    .template-name { font-size: 14px; font-weight: 500; }
+    .template-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+    .template-meta { font-size: 11px; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><div class="circle"></div><span>VERDANT</span></div>
+      <nav class="nav">
+        <span class="nav-section">Main</span>
+        <a href="dashboard.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>Dashboard</a>
+        <a href="energy.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>Energy</a>
+        <a href="sites.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 2a7 7 0 00-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 00-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></span>Sites</a>
+        <a href="solar.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m-7.07-3.93l2.83-2.83m8.48-8.48l2.83-2.83M2 12h4m12 0h4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83"/></svg></span>Solar</a>
+        <a href="wind.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.59 4.59A2 2 0 1111 8H2m10.59 11.41A2 2 0 1014 16H2m15.73-8.27A2.5 2.5 0 1119.5 12H2"/></svg></span>Wind</a>
+        <span class="nav-section">Management</span>
+        <a href="offsets.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M8 12l2.5 2.5L16 9"/></svg></span>Carbon Offsets</a>
+        <a href="reports.html" class="nav-item active"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></span>Reports</a>
+        <a href="settings.html" class="nav-item"><span class="nav-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1.08-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1.08 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 010 4h-.09c-.658.003-1.25.396-1.51 1z"/></svg></span>Settings</a>
+      </nav>
+      <div class="sidebar-footer"><div class="avatar">JD</div><div class="user-info"><div class="user-name">Jane Doe</div><div class="user-role">Sustainability Lead</div></div></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-left"><h1>Reports</h1><p>Generate, schedule, and download reports</p></div>
+        <div class="topbar-actions">
+          <button class="btn-primary">+ New Report</button>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="two-col">
+          <!-- Recent Reports -->
+          <div class="card">
+            <div class="card-title">Recent Reports</div>
+            <div class="card-subtitle">Previously generated reports</div>
+            <div class="report-list">
+              <div class="report-item">
+                <div class="report-icon pdf"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></div>
+                <div class="report-info">
+                  <div class="report-name">Q1 2026 Sustainability Report</div>
+                  <div class="report-meta"><span>PDF, 2.4 MB</span><span>Mar 30, 2026</span></div>
+                </div>
+                <span class="badge green">Ready</span>
+                <div class="report-actions">
+                  <button class="icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg></button>
+                </div>
+              </div>
+              <div class="report-item">
+                <div class="report-icon xlsx"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></div>
+                <div class="report-info">
+                  <div class="report-name">March Energy Production Data</div>
+                  <div class="report-meta"><span>XLSX, 1.8 MB</span><span>Mar 29, 2026</span></div>
+                </div>
+                <span class="badge green">Ready</span>
+                <div class="report-actions">
+                  <button class="icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg></button>
+                </div>
+              </div>
+              <div class="report-item">
+                <div class="report-icon pdf"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></div>
+                <div class="report-info">
+                  <div class="report-name">Carbon Offset Compliance Report</div>
+                  <div class="report-meta"><span>PDF, 3.1 MB</span><span>Mar 25, 2026</span></div>
+                </div>
+                <span class="badge green">Ready</span>
+                <div class="report-actions">
+                  <button class="icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg></button>
+                </div>
+              </div>
+              <div class="report-item">
+                <div class="report-icon csv"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></div>
+                <div class="report-info">
+                  <div class="report-name">Site Performance Export</div>
+                  <div class="report-meta"><span>CSV, 890 KB</span><span>Mar 22, 2026</span></div>
+                </div>
+                <span class="badge green">Ready</span>
+                <div class="report-actions">
+                  <button class="icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg></button>
+                </div>
+              </div>
+              <div class="report-item">
+                <div class="report-icon pdf"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></div>
+                <div class="report-info">
+                  <div class="report-name">Annual Investor ESG Summary 2025</div>
+                  <div class="report-meta"><span>PDF, 5.6 MB</span><span>Jan 15, 2026</span></div>
+                </div>
+                <span class="badge green">Ready</span>
+                <div class="report-actions">
+                  <button class="icon-btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scheduled Reports -->
+          <div class="card">
+            <div class="card-title">Scheduled Reports</div>
+            <div class="card-subtitle">Automated report generation</div>
+            <div class="schedule-list">
+              <div class="schedule-item">
+                <div class="schedule-header">
+                  <span class="schedule-name">Weekly Energy Summary</span>
+                  <span class="badge blue">Weekly</span>
+                </div>
+                <div class="schedule-next">Next: Monday, Apr 7 at 8:00 AM</div>
+                <div class="schedule-recipients">To: jane.doe@verdant.energy, ops-team@verdant.energy</div>
+              </div>
+              <div class="schedule-item">
+                <div class="schedule-header">
+                  <span class="schedule-name">Monthly Performance</span>
+                  <span class="badge blue">Monthly</span>
+                </div>
+                <div class="schedule-next">Next: May 1 at 9:00 AM</div>
+                <div class="schedule-recipients">To: leadership@verdant.energy</div>
+              </div>
+              <div class="schedule-item">
+                <div class="schedule-header">
+                  <span class="schedule-name">Quarterly ESG Report</span>
+                  <span class="badge blue">Quarterly</span>
+                </div>
+                <div class="schedule-next">Next: Jul 1 at 9:00 AM</div>
+                <div class="schedule-recipients">To: board@verdant.energy, investors@verdant.energy</div>
+              </div>
+              <div class="schedule-item">
+                <div class="schedule-header">
+                  <span class="schedule-name">Daily Anomaly Alerts</span>
+                  <span class="badge blue">Daily</span>
+                </div>
+                <div class="schedule-next">Next: Tomorrow at 6:00 AM</div>
+                <div class="schedule-recipients">To: ops-team@verdant.energy</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Report Templates -->
+        <div class="template-grid">
+          <div class="template-card">
+            <div class="template-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+            <div class="template-name">Energy Production</div>
+            <div class="template-desc">Detailed breakdown of energy output by source, site, and time period.</div>
+            <div class="template-meta">Last used: 2 days ago</div>
+          </div>
+          <div class="template-card">
+            <div class="template-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M8 12l2.5 2.5L16 9"/></svg></div>
+            <div class="template-name">Carbon Compliance</div>
+            <div class="template-desc">Regulatory compliance report for carbon offset certificates and credits.</div>
+            <div class="template-meta">Last used: 6 days ago</div>
+          </div>
+          <div class="template-card">
+            <div class="template-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
+            <div class="template-name">ESG Summary</div>
+            <div class="template-desc">Environmental, Social, and Governance metrics for investor communications.</div>
+            <div class="template-meta">Last used: Jan 15, 2026</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

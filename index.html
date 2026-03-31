@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verdant Energy — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+      background-color: #0a0f0d;
+      color: #fff;
+    }
+
+    .page {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Left Panel ── */
+    .left-panel {
+      width: 55%;
+      background-color: #0f1c14;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 48px 64px;
+      overflow: hidden;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: #2ecc70;
+    }
+
+    .logo-text {
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: 6px;
+      color: #fff;
+    }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .hero-title {
+      font-weight: 300;
+      font-size: 64px;
+      line-height: 72px;
+      color: #fff;
+    }
+
+    .hero-subtitle {
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 26px;
+      color: #b2bfb8;
+    }
+
+    .stats {
+      display: flex;
+      gap: 48px;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-value {
+      font-weight: 600;
+      font-size: 28px;
+      color: #2ecc70;
+    }
+
+    .stat-label {
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: #66736b;
+    }
+
+    /* ── Right Panel ── */
+    .right-panel {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px;
+      background-color: #0a0f0d;
+      overflow: hidden;
+    }
+
+    .login-card {
+      width: 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .login-header {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .login-title {
+      font-weight: 600;
+      font-size: 28px;
+      color: #fff;
+    }
+
+    .login-subtitle {
+      font-weight: 400;
+      font-size: 14px;
+      color: #66736b;
+    }
+
+    /* ── Form ── */
+    .form-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field-label {
+      font-weight: 500;
+      font-size: 13px;
+      color: #b2bfb8;
+    }
+
+    .field-input {
+      width: 100%;
+      height: 48px;
+      background-color: #1a291f;
+      border: 1px solid #293d30;
+      border-radius: 10px;
+      padding: 0 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: #fff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .field-input::placeholder {
+      color: #66736b;
+    }
+
+    .field-input:focus {
+      border-color: #2ecc70;
+    }
+
+    .form-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .remember-me input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      background-color: #1a291f;
+      border: 1px solid #293d30;
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .remember-me input[type="checkbox"]:checked {
+      background-color: #2ecc70;
+      border-color: #2ecc70;
+    }
+
+    .remember-me input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 1px;
+      width: 5px;
+      height: 9px;
+      border: solid #0a0f0d;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .remember-me span {
+      font-weight: 400;
+      font-size: 13px;
+      color: #b2bfb8;
+    }
+
+    .forgot-password {
+      font-weight: 500;
+      font-size: 13px;
+      color: #2ecc70;
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .forgot-password:hover {
+      text-decoration: underline;
+    }
+
+    /* ── Buttons ── */
+    .btn-signin {
+      width: 100%;
+      height: 52px;
+      background-color: #2ecc70;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      color: #0a0f0d;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .btn-signin:hover {
+      background-color: #27ae60;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background-color: #293d30;
+    }
+
+    .divider-text {
+      font-weight: 400;
+      font-size: 12px;
+      color: #66736b;
+    }
+
+    .btn-sso {
+      width: 100%;
+      height: 48px;
+      background-color: #1a291f;
+      border: 1px solid #293d30;
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      color: #b2bfb8;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .btn-sso:hover {
+      border-color: #2ecc70;
+    }
+
+    .signup-prompt {
+      font-size: 13px;
+      display: flex;
+      gap: 4px;
+    }
+
+    .signup-prompt span {
+      font-weight: 400;
+      color: #66736b;
+    }
+
+    .signup-prompt a {
+      font-weight: 600;
+      color: #2ecc70;
+      text-decoration: none;
+    }
+
+    .signup-prompt a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Left Panel -->
+    <div class="left-panel">
+      <div class="logo">
+        <div class="logo-circle"></div>
+        <span class="logo-text">VERDANT</span>
+      </div>
+
+      <div class="hero">
+        <h1 class="hero-title">
+          Powering<br>
+          a cleaner<br>
+          tomorrow.
+        </h1>
+        <p class="hero-subtitle">
+          Monitor your renewable energy portfolio,<br>
+          track carbon offsets, and manage sustainability goals.
+        </p>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-value">12.4 GW</span>
+          <span class="stat-label">CLEAN ENERGY</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">3.2M</span>
+          <span class="stat-label">TONS CO&#8322; OFFSET</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">48K+</span>
+          <span class="stat-label">ACTIVE USERS</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="right-panel">
+      <div class="login-card">
+        <div class="login-header">
+          <h2 class="login-title">Welcome back</h2>
+          <p class="login-subtitle">Sign in to your Verdant dashboard</p>
+        </div>
+
+        <form class="form-fields" onsubmit="return false;">
+          <div class="field-group">
+            <label class="field-label" for="email">Email address</label>
+            <input class="field-input" type="email" id="email" placeholder="name@company.com" autocomplete="email">
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="password">Password</label>
+            <input class="field-input" type="password" id="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" autocomplete="current-password">
+          </div>
+
+          <div class="form-options">
+            <label class="remember-me">
+              <input type="checkbox">
+              <span>Remember me</span>
+            </label>
+            <a href="#" class="forgot-password">Forgot password?</a>
+          </div>
+        </form>
+
+        <button class="btn-signin" type="submit" onclick="window.location.href='dashboard.html'">Sign in</button>
+
+        <div class="divider">
+          <div class="divider-line"></div>
+          <span class="divider-text">or</span>
+          <div class="divider-line"></div>
+        </div>
+
+        <button class="btn-sso" onclick="window.location.href='dashboard.html'">Continue with SSO</button>
+
+        <div class="signup-prompt">
+          <span>Don't have an account?</span>
+          <a href="#">Create one</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
