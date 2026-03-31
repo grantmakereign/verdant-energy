@@ -125,6 +125,8 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 24px;
+      display: flex;
+      flex-direction: column;
     }
 
     .chart-header {
@@ -134,13 +136,26 @@
       margin-bottom: 20px;
     }
 
-    .sparkline-row {
+    /* Hourly chart — fills available card height */
+    .hourly-chart {
       display: flex;
-      align-items: flex-end;
+      flex-direction: column;
+    }
+
+    .spark-wrap {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sparkline-row {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      align-items: stretch;
       gap: 4px;
-      height: 180px;
-      padding-bottom: 24px;
-      position: relative;
     }
 
     .spark-col {
@@ -148,10 +163,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
-      height: 100%;
-      justify-content: flex-end;
     }
+
+    .spark-spacer { /* pushes bar down */ }
 
     .spark-bar {
       width: 80%;
@@ -159,14 +173,16 @@
       min-height: 4px;
     }
 
+    .spark-axis {
+      display: flex;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
     .spark-label {
       font-size: 10px;
       color: var(--text-muted);
-      position: absolute;
-      bottom: 0;
     }
-
-    .spark-col .spark-label { position: static; }
 
     /* ── Demand Table ── */
     .demand-table {
@@ -348,21 +364,26 @@
             <div class="chart-header">
               <div><div class="grid-title">Today's Production</div><div class="grid-subtitle">Hourly output (GWh)</div></div>
             </div>
-            <div class="sparkline-row">
-              <div class="spark-col"><div class="spark-bar" style="height:15%;background:var(--green)"></div><span class="spark-label">6a</span></div>
-              <div class="spark-col"><div class="spark-bar" style="height:25%;background:var(--green)"></div><span class="spark-label">7a</span></div>
-              <div class="spark-col"><div class="spark-bar" style="height:45%;background:var(--green)"></div><span class="spark-label">8a</span></div>
-              <div class="spark-col"><div class="spark-bar" style="height:65%;background:var(--green)"></div><span class="spark-label">9a</span></div>
-              <div class="spark-col"><div class="spark-bar" style="height:80%;background:var(--green)"></div><span class="spark-label">10a</span></div>
-              <div class="spark-col"><div class="spark-bar" style="height:90%;background:var(--green)"></div><span class="spark-label">11a</span></div>
-              <div class="spark-col"><div class="spark-bar" style="height:100%;background:var(--green)"></div><span class="spark-label">12p</span></div>
-              <div class="spark-col"><div class="spark-bar" style="height:95%;background:var(--green)"></div><span class="spark-label">1p</span></div>
-              <div class="spark-col"><div class="spark-bar" style="height:85%;background:var(--green)"></div><span class="spark-label">2p</span></div>
-              <div class="spark-col"><div class="spark-bar" style="height:70%;background:var(--green)"></div><span class="spark-label">3p</span></div>
-              <div class="spark-col"><div class="spark-bar" style="height:50%;background:var(--green)"></div><span class="spark-label">4p</span></div>
-              <div class="spark-col"><div class="spark-bar" style="height:30%;background:var(--border)"></div><span class="spark-label">5p</span></div>
-              <div class="spark-col"><div class="spark-bar" style="height:15%;background:var(--border)"></div><span class="spark-label">6p</span></div>
-              <div class="spark-col"><div class="spark-bar" style="height:8%;background:var(--border)"></div><span class="spark-label">7p</span></div>
+            <div class="spark-wrap">
+              <div class="sparkline-row">
+                <div class="spark-col"><div class="spark-spacer" style="flex:85"></div><div class="spark-bar" style="flex:15;background:var(--green)"></div></div>
+                <div class="spark-col"><div class="spark-spacer" style="flex:75"></div><div class="spark-bar" style="flex:25;background:var(--green)"></div></div>
+                <div class="spark-col"><div class="spark-spacer" style="flex:55"></div><div class="spark-bar" style="flex:45;background:var(--green)"></div></div>
+                <div class="spark-col"><div class="spark-spacer" style="flex:35"></div><div class="spark-bar" style="flex:65;background:var(--green)"></div></div>
+                <div class="spark-col"><div class="spark-spacer" style="flex:20"></div><div class="spark-bar" style="flex:80;background:var(--green)"></div></div>
+                <div class="spark-col"><div class="spark-spacer" style="flex:10"></div><div class="spark-bar" style="flex:90;background:var(--green)"></div></div>
+                <div class="spark-col"><div class="spark-spacer" style="flex:0"></div><div class="spark-bar" style="flex:100;background:var(--green)"></div></div>
+                <div class="spark-col"><div class="spark-spacer" style="flex:5"></div><div class="spark-bar" style="flex:95;background:var(--green)"></div></div>
+                <div class="spark-col"><div class="spark-spacer" style="flex:15"></div><div class="spark-bar" style="flex:85;background:var(--green)"></div></div>
+                <div class="spark-col"><div class="spark-spacer" style="flex:30"></div><div class="spark-bar" style="flex:70;background:var(--green)"></div></div>
+                <div class="spark-col"><div class="spark-spacer" style="flex:50"></div><div class="spark-bar" style="flex:50;background:var(--green)"></div></div>
+                <div class="spark-col"><div class="spark-spacer" style="flex:70"></div><div class="spark-bar" style="flex:30;background:var(--border)"></div></div>
+                <div class="spark-col"><div class="spark-spacer" style="flex:85"></div><div class="spark-bar" style="flex:15;background:var(--border)"></div></div>
+                <div class="spark-col"><div class="spark-spacer" style="flex:92"></div><div class="spark-bar" style="flex:8;background:var(--border)"></div></div>
+              </div>
+              <div class="spark-axis">
+                <span class="spark-label">6a</span><span class="spark-label">7a</span><span class="spark-label">8a</span><span class="spark-label">9a</span><span class="spark-label">10a</span><span class="spark-label">11a</span><span class="spark-label">12p</span><span class="spark-label">1p</span><span class="spark-label">2p</span><span class="spark-label">3p</span><span class="spark-label">4p</span><span class="spark-label">5p</span><span class="spark-label">6p</span><span class="spark-label">7p</span>
+              </div>
             </div>
           </div>
 

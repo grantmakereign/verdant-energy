@@ -92,20 +92,47 @@
 
     .full-card { grid-column: 1 / -1; }
 
-    /* Wind speed chart */
-    .speed-chart {
+    /* Wind speed chart — fills available card height */
+    .chart-card {
       display: flex;
-      align-items: flex-end;
-      gap: 3px;
-      height: 100px;
-      padding-top: 8px;
+      flex-direction: column;
     }
 
-    .speed-bar {
+    .speed-chart-wrap {
       flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .speed-chart {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      align-items: stretch;
+      gap: 3px;
+    }
+
+    .speed-bar-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .speed-bar-spacer { /* pushes bar down proportionally */ }
+
+    .speed-bar {
       border-radius: 2px 2px 0 0;
       min-height: 2px;
-      transition: height 0.3s;
+    }
+
+    .speed-axis {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--text-muted);
+      flex-shrink: 0;
     }
   </style>
 </head>
@@ -199,37 +226,39 @@
           </div>
 
           <!-- Wind Speed (24h) -->
-          <div class="card">
+          <div class="card chart-card">
             <div class="card-title">Wind Speed — 24 Hour</div>
             <div class="card-subtitle">Average across all sites (m/s)</div>
-            <div class="speed-chart">
-              <div class="speed-bar" style="height:35%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:30%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:28%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:32%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:40%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:45%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:55%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:60%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:70%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:75%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:85%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:90%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:95%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:100%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:92%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:80%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:72%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:65%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:58%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:50%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:45%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:40%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:38%;background:var(--blue)"></div>
-              <div class="speed-bar" style="height:36%;background:var(--blue)"></div>
-            </div>
-            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-top:8px">
-              <span>12 AM</span><span>6 AM</span><span>12 PM</span><span>6 PM</span><span>Now</span>
+            <div class="speed-chart-wrap">
+              <div class="speed-chart">
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:65"></div><div class="speed-bar" style="flex:35;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:70"></div><div class="speed-bar" style="flex:30;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:72"></div><div class="speed-bar" style="flex:28;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:68"></div><div class="speed-bar" style="flex:32;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:60"></div><div class="speed-bar" style="flex:40;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:55"></div><div class="speed-bar" style="flex:45;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:45"></div><div class="speed-bar" style="flex:55;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:40"></div><div class="speed-bar" style="flex:60;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:30"></div><div class="speed-bar" style="flex:70;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:25"></div><div class="speed-bar" style="flex:75;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:15"></div><div class="speed-bar" style="flex:85;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:10"></div><div class="speed-bar" style="flex:90;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:5"></div><div class="speed-bar" style="flex:95;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:0"></div><div class="speed-bar" style="flex:100;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:8"></div><div class="speed-bar" style="flex:92;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:20"></div><div class="speed-bar" style="flex:80;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:28"></div><div class="speed-bar" style="flex:72;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:35"></div><div class="speed-bar" style="flex:65;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:42"></div><div class="speed-bar" style="flex:58;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:50"></div><div class="speed-bar" style="flex:50;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:55"></div><div class="speed-bar" style="flex:45;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:60"></div><div class="speed-bar" style="flex:40;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:62"></div><div class="speed-bar" style="flex:38;background:var(--blue)"></div></div>
+                <div class="speed-bar-col"><div class="speed-bar-spacer" style="flex:64"></div><div class="speed-bar" style="flex:36;background:var(--blue)"></div></div>
+              </div>
+              <div class="speed-axis">
+                <span>12 AM</span><span>6 AM</span><span>12 PM</span><span>6 PM</span><span>Now</span>
+              </div>
             </div>
           </div>
         </div>
