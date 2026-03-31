@@ -11,20 +11,21 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg-primary: #0a0f0d;
-      --bg-secondary: #0f1c14;
-      --bg-card: #111e16;
-      --bg-input: #1a291f;
-      --border: #293d30;
-      --green: #2ecc70;
-      --green-dim: #1a5c35;
-      --green-hover: #27ae60;
-      --text-primary: #ffffff;
-      --text-secondary: #b2bfb8;
-      --text-muted: #66736b;
-      --red: #e74c3c;
-      --yellow: #f1c40f;
-      --blue: #3498db;
+      --bg-primary:    #f9fdf9;
+      --bg-secondary:  #f5faf5;
+      --bg-card:       #ffffff;
+      --bg-input:      #f9fdf9;
+      --border:        #d4e8d4;
+      --green:         #4caf50;
+      --green-dim:     #e8f5e9;
+      --green-hover:   #43a047;
+      --text-primary:  #1b2e1b;
+      --text-secondary:#5a7a5a;
+      --text-muted:    #8faf8f;
+      --red:           #e53935;
+      --yellow:        #f9a825;
+      --blue:          #1e88e5;
+      --shadow-card:   0 4px 16px 0 rgba(26,38,26,0.08);
       --sidebar-width: 240px;
     }
 
@@ -70,7 +71,7 @@
       font-weight: 700;
       font-size: 15px;
       letter-spacing: 5px;
-      color: #fff;
+      color: var(--text-primary);
     }
 
     .nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
@@ -97,10 +98,10 @@
       border-left: 3px solid transparent;
     }
 
-    .nav-item:hover { color: var(--text-secondary); background: rgba(46,204,112,0.04); }
+    .nav-item:hover { color: var(--text-secondary); background: rgba(76,175,80,0.06); }
     .nav-item.active {
       color: var(--green);
-      background: rgba(46,204,112,0.08);
+      background: rgba(76,175,80,0.1);
       border-left-color: var(--green);
     }
 
@@ -154,6 +155,7 @@
       justify-content: space-between;
       padding: 20px 32px;
       border-bottom: 1px solid var(--border);
+      background: var(--bg-card);
       flex-shrink: 0;
     }
 
@@ -202,7 +204,7 @@
       font-family: 'Inter', sans-serif;
       font-size: 13px;
       font-weight: 600;
-      color: var(--bg-primary);
+      color: #fff;
       cursor: pointer;
       transition: background 0.15s;
     }
@@ -257,10 +259,10 @@
       font-size: 15px;
     }
 
-    .stat-icon.green { background: rgba(46,204,112,0.12); color: var(--green); }
-    .stat-icon.blue { background: rgba(52,152,219,0.12); color: var(--blue); }
-    .stat-icon.yellow { background: rgba(241,196,15,0.12); color: var(--yellow); }
-    .stat-icon.red { background: rgba(231,76,60,0.12); color: var(--red); }
+    .stat-icon.green { background: rgba(76,175,80,0.12); color: var(--green); }
+    .stat-icon.blue { background: rgba(30,136,229,0.12); color: var(--blue); }
+    .stat-icon.yellow { background: rgba(249,168,37,0.12); color: var(--yellow); }
+    .stat-icon.red { background: rgba(229,57,53,0.12); color: var(--red); }
 
     .stat-card-value {
       font-size: 28px;
